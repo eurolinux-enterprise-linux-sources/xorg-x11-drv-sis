@@ -4,14 +4,13 @@
 
 Summary:   Xorg X11 sis video driver
 Name:      xorg-x11-drv-sis
-Version:   0.10.7
-Release:   10%{?dist}
+Version:   0.10.8
+Release:   1%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
 
 Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
-Patch0:    sis-0.10.7-git.patch
 
 ExcludeArch: s390 s390x
 
@@ -28,7 +27,6 @@ X.Org X11 sis video driver.
 
 %prep
 %setup -q -n %{tarball}-%{version}
-%patch0 -p1
 
 %build
 autoreconf -vif
@@ -53,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/sis.4*
 
 %changelog
+* Wed Nov 11 2015 Adam Jackson <ajax@redhat.com> 0.10.8-1
+- sis 0.10.8
+
 * Mon Apr 28 2014 Adam Jackson <ajax@redhat.com> - 0.10.7-10
 - Fix rhel arch list
 
