@@ -5,42 +5,40 @@
 Summary:   Xorg X11 sis video driver
 Name:      xorg-x11-drv-sis
 Version:   0.10.7
-Release:   2%{?dist}
+Release:   10%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
-Source1:   sis.xinf
+Patch0:    sis-0.10.7-git.patch
 
 ExcludeArch: s390 s390x
 
-BuildRequires: xorg-x11-server-sdk >= 1.4.99.1
+BuildRequires: xorg-x11-server-devel >= 1.10.99.902
 BuildRequires: mesa-libGL-devel >= 6.4-4
 BuildRequires: libdrm-devel >= 2.0-1
+BuildRequires: autoconf automake libtool
 
-Requires:  hwdata
-Requires:  Xorg %(xserver-sdk-abi-requires ansic)
-Requires:  Xorg %(xserver-sdk-abi-requires videodrv)
+Requires: Xorg %(xserver-sdk-abi-requires ansic)
+Requires: Xorg %(xserver-sdk-abi-requires videodrv)
 
 %description 
 X.Org X11 sis video driver.
 
 %prep
 %setup -q -n %{tarball}-%{version}
+%patch0 -p1
 
 %build
-%configure --disable-static
-make
+autoreconf -vif
+%configure --disable-static --disable-dri
+make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
 make install DESTDIR=$RPM_BUILD_ROOT
-
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/hwdata/videoaliases
-install -m 0644 %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/hwdata/videoaliases/
 
 # FIXME: Remove all libtool archives (*.la) from modules directory.  This
 # should be fixed in upstream Makefile.am or whatever.
@@ -52,21 +50,101 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %{driverdir}/sis_drv.so
-%{_datadir}/hwdata/videoaliases/sis.xinf
 %{_mandir}/man4/sis.4*
 
 %changelog
-* Wed Aug 22 2012 airlied@redhat.com - 0.10.7-2
-- rebuild for server ABI requires
+* Mon Apr 28 2014 Adam Jackson <ajax@redhat.com> - 0.10.7-10
+- Fix rhel arch list
 
-* Mon Aug 06 2012 Dave Airlie <airlied@redhat.com> 0.10.7-1
-- upstream release 0.10.7
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.7-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Tue Jun 28 2011 Ben Skeggs <bskeggs@redhat.com> 0.10.3-1
-- upstream release 0.10.3
+* Thu Mar 07 2013 Dave Airlie <airlied@redhat.com> 0.10.7-8
+- autoreconf for aarch64
 
-* Mon Nov 30 2009 Dennis Gregorovic <dgregor@redhat.com> - 0.10.2-1.1
-- Rebuilt for RHEL 6
+* Thu Mar 07 2013 Peter Hutterer <peter.hutterer@redhat.com> - 0.10.7-7
+- require xorg-x11-server-devel, not -sdk
+
+* Thu Mar 07 2013 Peter Hutterer <peter.hutterer@redhat.com> - 0.10.7-6
+- ABI rebuild
+
+* Fri Feb 15 2013 Peter Hutterer <peter.hutterer@redhat.com> - 0.10.7-5
+- ABI rebuild
+
+* Fri Feb 15 2013 Peter Hutterer <peter.hutterer@redhat.com> - 0.10.7-4
+- ABI rebuild
+
+* Thu Jan 10 2013 Adam Jackson <ajax@redhat.com> - 0.10.7-3
+- ABI rebuild
+
+* Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.7-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jul 18 2012 Dave Airlie <airlied@redhat.com> 0.10.7-1
+- sis 0.10.7
+
+* Fri Apr 27 2012 Adam Jackson <ajax@redhat.com> 0.10.4-1
+- sis 0.10.4
+
+* Thu Apr 05 2012 Adam Jackson <ajax@redhat.com> - 0.10.3-17
+- RHEL arch exclude updates
+
+* Sat Feb 11 2012 Peter Hutterer <peter.hutterer@redhat.com> - 0.10.3-16
+- ABI rebuild
+
+* Fri Feb 10 2012 Peter Hutterer <peter.hutterer@redhat.com> - 0.10.3-15
+- ABI rebuild
+
+* Tue Jan 24 2012 Peter Hutterer <peter.hutterer@redhat.com> - 0.10.3-14
+- ABI rebuild
+
+* Wed Jan 04 2012 Peter Hutterer <peter.hutterer@redhat.com> 0.10.3-13
+- Sync with latest git again
+- Add a hack to replace the now-removed miPointerAbsoluteCursor
+- Add a hack to allow build without DRI
+
+* Wed Jan 04 2012 Peter Hutterer <peter.hutterer@redhat.com> - 0.10.3-12
+- Rebuild for server 1.12
+
+* Fri Dec 16 2011 Adam Jackson <ajax@redhat.com> - 0.10.3-11
+- Drop xinf file
+
+* Thu Nov 17 2011 Adam Jackson <ajax@redhat.com> 0.10.3-10
+- Disable DRI1
+
+* Mon Nov 14 2011 Adam Jackson <ajax@redhat.com> - 0.10.3-9
+- ABI rebuild
+
+* Thu Nov 10 2011 Adam Jackson <ajax@redhat.com> 0.10.3-8
+- ABI rebuild
+- sis-0.10.3-git.patch: Sync with git for new ABI
+
+* Thu Aug 18 2011 Adam Jackson <ajax@redhat.com> - 0.10.3-7
+- Rebuild for xserver 1.11 ABI
+
+* Wed May 11 2011 Peter Hutterer <peter.hutterer@redhat.com> - 0.10.3-6
+- Rebuild for server 1.11
+
+* Mon Feb 28 2011 Peter Hutterer <peter.hutterer@redhat.com> - 0.10.3-5
+- Rebuild for server 1.10
+
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.3-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Thu Dec 02 2010 Peter Hutterer <peter.hutterer@redhat.com> - 0.10.3-3
+- Rebuild for server 1.10
+
+* Wed Oct 27 2010 Adam Jackson <ajax@redhat.com> 0.10.3-2
+- Add ABI requires magic (#542742)
+
+* Mon Jul 05 2010 Dave Airlie <airlied@redhat.com> 0.10.3-1
+- sis 0.10.3 - build for 1.9
+
+* Mon Jul 05 2010 Peter Hutterer <peter.hutterer@redhat.com> - 0.10.2-3
+- rebuild for X Server 1.9
+
+* Thu Jan 21 2010 Peter Hutterer <peter.hutterer@redhat.com> - 0.10.2-2
+- Rebuild for server 1.8
 
 * Tue Aug 04 2009 Dave Airlie <airlied@redhat.com> 0.10.2-1
 - sis 0.10.2
