@@ -4,8 +4,8 @@
 
 Summary:   Xorg X11 sis video driver
 Name:      xorg-x11-drv-sis
-Version:   0.10.3
-Release:   1%{?dist}
+Version:   0.10.7
+Release:   2%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -56,6 +56,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/sis.4*
 
 %changelog
+* Wed Aug 22 2012 airlied@redhat.com - 0.10.7-2
+- rebuild for server ABI requires
+
+* Mon Aug 06 2012 Dave Airlie <airlied@redhat.com> 0.10.7-1
+- upstream release 0.10.7
+
 * Tue Jun 28 2011 Ben Skeggs <bskeggs@redhat.com> 0.10.3-1
 - upstream release 0.10.3
 
