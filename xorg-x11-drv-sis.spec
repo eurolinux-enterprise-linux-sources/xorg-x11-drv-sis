@@ -4,8 +4,8 @@
 
 Summary:   Xorg X11 sis video driver
 Name:      xorg-x11-drv-sis
-Version:   0.10.2
-Release:   1.1%{?dist}
+Version:   0.10.3
+Release:   1%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -21,7 +21,8 @@ BuildRequires: mesa-libGL-devel >= 6.4-4
 BuildRequires: libdrm-devel >= 2.0-1
 
 Requires:  hwdata
-Requires:  xorg-x11-server-Xorg >= 1.4.99.1
+Requires:  Xorg %(xserver-sdk-abi-requires ansic)
+Requires:  Xorg %(xserver-sdk-abi-requires videodrv)
 
 %description 
 X.Org X11 sis video driver.
@@ -55,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/sis.4*
 
 %changelog
+* Tue Jun 28 2011 Ben Skeggs <bskeggs@redhat.com> 0.10.3-1
+- upstream release 0.10.3
+
 * Mon Nov 30 2009 Dennis Gregorovic <dgregor@redhat.com> - 0.10.2-1.1
 - Rebuilt for RHEL 6
 
